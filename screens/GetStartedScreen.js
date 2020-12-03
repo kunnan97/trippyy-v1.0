@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState } from 'react';
 import {
     View,
     StyleSheet,
@@ -9,14 +9,14 @@ import {
     KeyboardAvoidingView, 
     Platform
 } from 'react-native';
-import BottomSheet from 'reanimated-bottom-sheet';
 import {useDispatch} from 'react-redux';
+import BottomSheet from 'reanimated-bottom-sheet'
 
 import DefaultTextBold from '../components/UI/DefaultTextBold';
 import BackButton from '../components/UI/BackButton';
 import CalendarInput from '../components/App/GetStarted/CalendarInput';
-import CalendarSelector from '../components/App/GetStarted/CalenderSelector';
 import DestinationInput from '../components/App/GetStarted/DestinationInput';
+import CalendarSelector from '../components/App/GetStarted/CalendarSelector';
 import { setEnd, setStart } from '../store/actions/Date';
 import ContinueButton from '../components/UI/ContinueButton';
 
@@ -45,13 +45,13 @@ const GetStartedScreen = props => {
 
     useEffect(() => {
         const handler = () => {
-            sheetRef.current.snapTo(3);
+            Platform.OS === 'android' ? sheetRef.current.snapTo(3) : null;
         }
 
         Keyboard.addListener('keyboardDidShow', handler)
         return () => {
             Keyboard.removeListener('keyboardDidShow', handler);
-            sheetRef.current.snapTo(2);
+            Platform.OS === 'android' ? sheetRef.current.snapTo(2) : null;
         }
     }, [])
     
@@ -67,7 +67,7 @@ const GetStartedScreen = props => {
     const dismiss = () => {
         Keyboard.dismiss();
         setKeyboardShown(false)
-        sheetRef.current.snapTo(2);
+        Platform.OS === 'android' ? sheetRef.current.snapTo(2) : null;
     }
 
     const dispatch = useDispatch();
@@ -167,6 +167,7 @@ const GetStartedScreen = props => {
                                               
                     </View>
 
+                    {Platform.OS === 'android' ? 
                     <BottomSheet
                         snapPoints={['43%', '20%', 45, 0]}
                         renderContent = {keyboardShown ? renderEmpty : () => (<CalendarSelector/>)}
@@ -176,6 +177,8 @@ const GetStartedScreen = props => {
                         enabledContentTapInteraction = {false}
 
                     />
+                    :
+                    null}
                 </ImageBackground>
             </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
